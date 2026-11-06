@@ -12,8 +12,12 @@ export default function conectarServidor(
 ): Promise<void> {
 
     return new Promise((resolve, reject) => {
-        const caminhoArquivo = path.resolve(RAIZ_PROJETO, fileName);
-        const nomeArquivo = path.basename(caminhoArquivo);
+        const nomeArquivo = path.basename(fileName.trim());
+        const caminhoArquivo = path.join(RAIZ_PROJETO, nomeArquivo);
+        if (!nomeArquivo || path.extname(nomeArquivo).toLowerCase() !== '.txt') {
+            reject(new Error('Informe um arquivo .txt localizado na raiz do projeto.'));
+            return;
+        }
         const nomePDF = `${path.parse(nomeArquivo).name}.pdf`;
         const caminhoPDF = path.join(PASTA_SAIDA, nomePDF);
 

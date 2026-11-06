@@ -1,7 +1,7 @@
 {
   "name": "file-conversion",
   "version": "1.0.0",
-  "description": "Sistema distribuído de conversão de arquivos TXT para PDF utilizando sockets TCP.",
+  "description": "APS 02: sistema distribuído multiusuário de conversão TXT para PDF com sockets TCP.",
   "main": "dist/server/servidor.js",
   "scripts": {
     "build": "tsc",

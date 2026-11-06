@@ -8,6 +8,7 @@ import Conversor from './conversor.js';
 const HOST = '127.0.0.1';
 const PORT = 5000;
 const TEMP_DIR = path.resolve('temp');
+const TAMANHO_MAXIMO_ARQUIVO = 64 * 1024 * 1024;
 
 const server = net.createServer((socket) => {
     console.log('Cliente conectado!');
@@ -29,6 +30,11 @@ const server = net.createServer((socket) => {
 
             tamanhoArquivo = dadosArquivo.readUInt32BE(0);
             dadosArquivo = dadosArquivo.subarray(4);
+
+            if (tamanhoArquivo > TAMANHO_MAXIMO_ARQUIVO) {
+                socket.end('REJECT Arquivo excede o limite de 64 MiB\n');
+                return;
+            }
         }
 
         if (dadosArquivo.length > tamanhoArquivo) {
@@ -67,7 +73,7 @@ const server = net.createServer((socket) => {
 
         } catch (error) {
             console.error('Erro durante a conversão:', error);
-            socket.destroy();
+            if (socket.writable) socket.end('ERROR Falha ao converter o arquivo\n');
         } finally {
             await fs.promises.rm(localArquivo, { force: true });
         }
